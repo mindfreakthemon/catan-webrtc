@@ -1,0 +1,33 @@
+
+ng-container('*ngIf'='gameNodeService')
+	.container-fluid
+		.row
+			.col
+				signaling-console('[peerType]'='peerType', '[peerNodeService]'='gameNodeService.playerNodeService.peerNodeService')
+				master-console('*ngIf'='peerType === PeerType.MASTER')
+				slave-console('*ngIf'='peerType === PeerType.SLAVE')
+			.col
+				button.btn.btn-big.btn-danger('(click)'='destroyPeer()') DISCONNECT
+
+ng-container('[ngSwitch]'='gameScenarioService.gameState')
+	ng-container('*ngSwitchCase'='GameState.START')
+		.jumbotron
+			h1.display-3 Catan WebRTC
+
+			.lead
+				button.btn.btn-big.btn-default('(click)'='gameScenarioService.nextGameState()') START
+
+	role-console('*ngSwitchCase'='GameState.CHOOSE_ROLE', '(peer)'='setupPeer($event)')
+
+	name-selector-console('*ngSwitchCase'='GameState.CHOOSE_NAME', '[playerNodeService]'='gameNodeService.playerNodeService', '(player)'='handlePlayerCreated($event)')
+
+	lobby('*ngSwitchCase'='GameState.LOBBY', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')
+
+	game-screen('*ngSwitchDefault'='', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')
+
+
+
+
+
+
+

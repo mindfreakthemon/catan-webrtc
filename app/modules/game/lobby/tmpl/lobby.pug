@@ -1,0 +1,17 @@
+
+ng-container('*ngIf'='players')
+	h2 Lobby: {{ players.length }} / {{ gameNodeService.playerNodeService.playersConstraints.playerLimit }}
+
+	ul.list-group
+		li.list-group-item('*ngFor'='let player of players', '[class.active]'='player.peerId === gameNodeService.id')
+			.container-fluid
+				.row
+					.col {{ player.name }} ( {{ player.peerId }} )
+					.col('*ngIf'='peerType === PeerType.MASTER && player.peerId !== gameNodeService.id')
+						button.btn.btn-danger('(click)'='ejectPlayer(player.peerId)') Eject
+
+	ng-container('*ngIf'='peerType === PeerType.SLAVE')
+		h2 Awaiting other players to join.
+
+	ng-container('*ngIf'='peerType === PeerType.MASTER && players.length >= gameNodeService.gameConfiguration.minPlayers')
+		button.btn.btn-block.btn-big.btn-default('(click)'='start()') START

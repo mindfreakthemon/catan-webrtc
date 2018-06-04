@@ -1,0 +1,14 @@
+h1 Token Selector
+ng-container('*ngIf'='players && playerTokens')
+	.btn-groupd
+		button.btn.btn-small(
+			'*ngFor'='let token of playerTokenKeys',
+			'[disabled]'='isTakenBy(token)'
+			'[style.background-color]'='PlayerToken[token]',
+			'(click)'='selectToken(token)'
+			)
+			ng-container('*ngIf'='isTakenBy(token)')
+				| {{ isTakenBy(token) }}
+
+	ng-container('*ngIf'='peerType === PeerType.MASTER')
+		button.btn.btn-big.btn-default('[disabled]'='playerTokens.size < players.length', '(click)'='confirmTokenSelection()') CONTINUE

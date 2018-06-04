@@ -1,0 +1,8 @@
+h1 Master Console
+
+.btn-group
+		button.btn.btn-sm.btn-default(
+			'*ngFor'='let connection of peerMasterService.connections',
+			type='button',
+			'(click)'='close(connection)'
+			) {{ connection.peer }}: {{ connection.open }}

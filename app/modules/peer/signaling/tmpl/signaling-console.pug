@@ -1,0 +1,9 @@
+.container('*ngIf'='peerNodeService')
+	.row
+		.col Discoverable: {{peerNodeService.isSignalingConnected}}
+
+		.col.btn-group
+			button.btn.btn-sm.btn-default('[disabled]'='peerNodeService.isSignalingConnected', type='button', '(click)'='peerNodeService.signalingReconnect()')
+				| Reconnect
+			button.btn.btn-sm.btn-default('[disabled]'='!peerNodeService.isSignalingConnected', type='button', '(click)'='peerNodeService.signalingDisconnect()')
+				| Disconnect

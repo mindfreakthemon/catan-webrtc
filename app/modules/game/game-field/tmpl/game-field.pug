@@ -1,0 +1,6 @@
+
+
+ng-container('*ngIf'='hexMap')
+	.field
+		.field-row('*ngFor'='let row of hexMap')
+			game-cell('*ngFor'='let cell of row', '[cell]'='cell', '[hexMap]'='hexMap')

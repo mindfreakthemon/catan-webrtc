@@ -1,0 +1,3 @@
+ng-container('[ngSwitch]'='gameScenarioService.gameState')
+	token-selector-console('*ngSwitchCase'='GameState.CHOOSE_PLAYER_TOKEN', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')
+	field-assembler('*ngSwitchCase'='GameState.ASSEMBLE_FIELD', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')

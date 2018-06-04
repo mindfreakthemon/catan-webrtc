@@ -1,0 +1,10 @@
+.container
+	.row
+
+		.col Connected to Master: {{peerSlaveService.isMasterConnected}}
+
+		.col.btn-group
+			button.btn.btn-sm.btn-default('[disabled]'='peerSlaveService.isMasterConnected', type='button', '(click)'='peerSlaveService.masterReconnect()')
+				| Reconnect
+			button.btn.btn-sm.btn-default('[disabled]'='!peerSlaveService.isMasterConnected', type='button', '(click)'='peerSlaveService.masterDisconnect()')
+				| Disconnect
