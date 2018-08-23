@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 
 @Component({
 	moduleId: module.id,
@@ -7,4 +7,6 @@ import { Component } from '@angular/core';
 	styleUrls: ['styles/root.css']
 })
 export class RootComponent {
+	@HostBinding('class.loaded')
+	public loaded = true;
 }

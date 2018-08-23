@@ -19,7 +19,7 @@ export abstract class GameNodeService {
 		return this.playerNodeService.events;
 	}
 
-	constructor(
+	protected constructor(
 		@Inject(GAME_CONFIGURATION)
 		public gameConfiguration: GameConfiguration,
 		public playerNodeService: PlayerNodeService

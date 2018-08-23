@@ -1,4 +1,3 @@
-
 ng-container('*ngIf'='gameNodeService')
 	.container-fluid
 		.row
@@ -10,12 +9,7 @@ ng-container('*ngIf'='gameNodeService')
 				button.btn.btn-big.btn-danger('(click)'='destroyPeer()') DISCONNECT
 
 ng-container('[ngSwitch]'='gameScenarioService.gameState')
-	ng-container('*ngSwitchCase'='GameState.START')
-		.jumbotron
-			h1.display-3 Catan WebRTC
-
-			.lead
-				button.btn.btn-big.btn-default('(click)'='gameScenarioService.nextGameState()') START
+	game-screen('*ngSwitchCase'='GameState.START')
 
 	role-console('*ngSwitchCase'='GameState.CHOOSE_ROLE', '(peer)'='setupPeer($event)')
 
@@ -23,11 +17,6 @@ ng-container('[ngSwitch]'='gameScenarioService.gameState')
 
 	lobby('*ngSwitchCase'='GameState.LOBBY', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')
 
-	game-screen('*ngSwitchDefault'='', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')
+	token-selector-console('*ngSwitchCase'='GameState.CHOOSE_PLAYER_TOKEN', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')
 
-
-
-
-
-
-
+	field-assembler('*ngSwitchCase'='GameState.ASSEMBLE_FIELD', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')

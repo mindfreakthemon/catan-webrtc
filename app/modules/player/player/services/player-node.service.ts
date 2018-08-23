@@ -20,7 +20,7 @@ export abstract class PlayerNodeService {
 		return this.peerNodeService.id;
 	}
 
-	constructor(
+	protected constructor(
 		@Inject(PLAYERS_CONSTRAINTS)
 		public playersConstraints: PlayersConstraints,
 		public peerNodeService: PeerNodeService

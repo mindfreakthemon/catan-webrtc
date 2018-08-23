@@ -1,7 +1,11 @@
 :host {
 	display: block;
-}
+	min-height: 100%;
+	height: auto;
 
-.fixed-top {
-	background: #424242;
+	&.loaded {
+		transition: background-color 500ms ease-out;
+		background-color: #424242;
+	}
+
 }

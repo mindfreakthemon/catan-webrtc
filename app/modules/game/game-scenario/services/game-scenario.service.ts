@@ -4,13 +4,13 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class GameScenarioService {
 
-	gameState: GameState = GameState.ASSEMBLE_FIELD;
+	gameState: GameState = GameState.START;
 
 	nextGameState(): void {
 		this.gameState = this.nextState(this.gameState);
 	}
 
-	resetGameState(state: GameState = GameState.CHOOSE_ROLE): void {
+	resetGameState(state: GameState = GameState.START): void {
 		this.gameState = state;
 	}
 

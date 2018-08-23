@@ -1,4 +1,5 @@
 import 'zone.js';
+import 'reflect-metadata';
 
 import { platformBrowser } from '@angular/platform-browser';
 import { enableProdMode } from '@angular/core';

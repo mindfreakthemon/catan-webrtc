@@ -1,3 +1,5 @@
-ng-container('[ngSwitch]'='gameScenarioService.gameState')
-	token-selector-console('*ngSwitchCase'='GameState.CHOOSE_PLAYER_TOKEN', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')
-	field-assembler('*ngSwitchCase'='GameState.ASSEMBLE_FIELD', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')
+.jumbotron
+	h1.display-3 Catan WebRTC
+
+	.lead
+		button.btn.btn-big.btn-default('(click)'='gameScenarioService.nextGameState()') START
