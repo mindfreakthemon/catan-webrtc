@@ -3,25 +3,25 @@ import { GameFieldCellSidePosition } from '../enums/game-field-cell-side-positio
 
 export class HexMapRow {
 	constructor(
-		public readonly size: number,
-		public readonly radius: number,
-		private readonly storage: GameFieldCell[][],
+		private readonly hexMap: HexMap,
 		private readonly i: number
 	) {
 	}
 
 	* [Symbol.iterator]() {
-		for (let j = 0; j < this.size; j++) {
-			let r = this.i - this.radius;
-			let q = j - this.radius;
+		const r = this.i;
+		const last = this.hexMap.size - Math.max(0, r - this.hexMap.radius);
 
-			if (Math.abs(r + q) > this.radius) {
-				continue;
-			}
-
-			yield this.storage[this.i][j];
+		for (let q = Math.max(0, this.hexMap.radius - r); q < last; q++) {
+			yield this.hexMap.storage[r][q];
 		}
 	}
+}
+
+export interface HexMapIndex {
+	r: number;
+	q: number;
+	a: number;
 }
 
 export class HexMap {
@@ -40,41 +40,109 @@ export class HexMap {
 			this.storage[i] = Array(size);
 
 			for (let j = 0; j < size; j++) {
-				this.storage[i][j] = HexMap.createField();
+				this.storage[i][j] = this.createField();
+			}
+		}
+
+		for (let i = 0; i < size; i++) {
+			for (let j = 0; j < size; j++) {
+				let { r, a } = this.getIndex(i, j);
+
+
+				if (a >  this.radius) {
+					continue;
+				}
+
+				// if (i) {
+				// 	this.connect(this.storage[i - 1][j], this.storage[i][j], GameFieldCellSidePosition.TOP);
+				//
+				// 	if (j) {
+				// 		this.connect(this.storage[i - 1][j - 1], this.storage[i][j], GameFieldCellSidePosition.TOP_LEFT);
+				// 	}
+				//
+				// 	if (j < size - 1) {
+				// 		this.connect(this.storage[i - 1][j + 1], this.storage[i][j], GameFieldCellSidePosition.TOP_RIGHT);
+				// 	}
+				// }
+				//
+				// if (j) {
+				// 	this.connect(this.storage[i - 1][j - 1], this.storage[i][j], GameFieldCellSidePosition.BOTTOM);
+				// }
+				//
+				// if (j < size - 1) {
+				// 	this.connect(this.storage[i - 1][j + 1], this.storage[i][j], GameFieldCellSidePosition.TOP_RIGHT);
+				// }
 			}
 		}
 	}
 
-	get(r: number, q: number): GameFieldCell {
+	public get(r: number, q: number): GameFieldCell {
 		return this.storage[r + this.size][q + this.size + Math.min(0, r)];
 	}
 
-	static createField(): GameFieldCell {
-		const topRoad = new GameFieldCellHolder();
-		const topRightRoad = new GameFieldCellHolder();
-		const rightBottomRoad = new GameFieldCellHolder();
-		const bottomRoad = new GameFieldCellHolder();
-		const bottomLeftRoad = new GameFieldCellHolder();
-		const topLeftRoad = new GameFieldCellHolder();
-
-		const topLeftHouse = new GameFieldCellHolder();
-		const topRightHouse = new GameFieldCellHolder();
-		const rightHouse = new GameFieldCellHolder();
-		const rightBottomHouse = new GameFieldCellHolder();
-		const leftHouse = new GameFieldCellHolder();
-		const leftBottomHouse = new GameFieldCellHolder();
-
-		const topLeft = new GameFieldCellSide(leftBottomHouse, topLeftRoad, topLeftHouse);
-		const top = new GameFieldCellSide(topLeftHouse, topRoad, topRightHouse);
-		const topRight = new GameFieldCellSide(topRightHouse, topRightRoad, rightHouse);
-		const bottomLeft = new GameFieldCellSide(leftHouse, bottomLeftRoad, leftBottomHouse);
-		const bottom = new GameFieldCellSide(rightBottomHouse, bottomRoad, leftHouse);
-		const bottomRight = new GameFieldCellSide(rightHouse, rightBottomRoad, rightBottomHouse);
-
-		return new GameFieldCell(topLeft, top, topRight, bottomLeft, bottom, bottomRight);
+	public getStorageCoordinates(r: number, q: number): any {
+		return {
+			i: r,
+			j: q - Math.max(0, this.size - r)
+		};
 	}
 
-	static connect(gameFieldCellA: GameFieldCell, gameFieldCellB: GameFieldCell, position: GameFieldCellSidePosition) {
+	public getOffsetCoordinates(i: number, j: number): any {
+		return {
+			q: j,
+			r: i
+		};
+	}
+
+	public getIndex(i: number, j: number): HexMapIndex {
+		let r = i - this.radius;
+		let q = j - this.radius;
+
+		return { r, q, a: Math.abs(r + q) };
+	}
+
+	* [Symbol.iterator]() {
+		for (let r = 0; r < this.size; r++) {
+			yield new HexMapRow(this, r);
+		}
+	}
+
+	private createField(): GameFieldCell {
+		const topLeftRoad = new GameFieldCellHolder();
+		const topRightRoad = new GameFieldCellHolder();
+
+		const leftRoad = new GameFieldCellHolder();
+		const rightRoad = new GameFieldCellHolder();
+
+		const rightBottomRoad = new GameFieldCellHolder();
+		const bottomLeftRoad = new GameFieldCellHolder();
+
+		const topHouse = new GameFieldCellHolder();
+		const topLeftHouse = new GameFieldCellHolder();
+		const topRightHouse = new GameFieldCellHolder();
+		const bottomLeftHouse = new GameFieldCellHolder();
+		const bottomRightHouse = new GameFieldCellHolder();
+		const bottomHouse = new GameFieldCellHolder();
+
+		const topLeftSide = new GameFieldCellSide(topLeftHouse, topLeftRoad, topHouse);
+		const topRightSide = new GameFieldCellSide(topHouse, topRightRoad, topRightHouse);
+
+		const leftSide = new GameFieldCellSide(bottomLeftHouse, leftRoad, topLeftHouse);
+		const rightSide = new GameFieldCellSide(topRightHouse, rightRoad, bottomRightHouse);
+
+		const bottomLeftSide = new GameFieldCellSide(bottomHouse, bottomLeftRoad, bottomLeftHouse);
+		const bottomRightSide = new GameFieldCellSide(bottomRightHouse, rightBottomRoad, bottomHouse);
+
+		return new GameFieldCell(topLeftSide, topRightSide, leftSide, rightSide, bottomLeftSide, bottomRightSide);
+	}
+
+	/**
+	 *
+	 * @param gameFieldCellA - Gets overwritten by values of gameFieldCellB
+	 * @param gameFieldCellB - Gets copied from to gameFieldCellA
+	 * @param position - Where to join
+	 */
+	private connect(gameFieldCellA: GameFieldCell, gameFieldCellB: GameFieldCell, position: GameFieldCellSidePosition): void {
 
 		switch (position) {
 			case GameFieldCellSidePosition.TOP_LEFT:
@@ -84,9 +152,9 @@ export class HexMap {
 				break;
 
 			case GameFieldCellSidePosition.TOP:
-				gameFieldCellA.top.leftHouse = gameFieldCellB.bottom.rightHouse;
-				gameFieldCellA.top.road = gameFieldCellB.bottom.road;
-				gameFieldCellA.top.rightHouse = gameFieldCellB.bottom.leftHouse;
+				gameFieldCellA.left.leftHouse = gameFieldCellB.right.rightHouse;
+				gameFieldCellA.left.road = gameFieldCellB.right.road;
+				gameFieldCellA.left.rightHouse = gameFieldCellB.right.leftHouse;
 				break;
 
 			case GameFieldCellSidePosition.TOP_RIGHT:
@@ -103,9 +171,9 @@ export class HexMap {
 				break;
 
 			case GameFieldCellSidePosition.BOTTOM:
-				gameFieldCellA.bottom.leftHouse = gameFieldCellB.top.rightHouse;
-				gameFieldCellA.bottom.road = gameFieldCellB.top.road;
-				gameFieldCellA.bottom.rightHouse = gameFieldCellB.top.leftHouse;
+				gameFieldCellA.right.leftHouse = gameFieldCellB.left.rightHouse;
+				gameFieldCellA.right.road = gameFieldCellB.left.road;
+				gameFieldCellA.right.rightHouse = gameFieldCellB.left.leftHouse;
 				break;
 
 			case GameFieldCellSidePosition.BOTTOM_RIGHT:
@@ -114,12 +182,6 @@ export class HexMap {
 				gameFieldCellA.topRight.rightHouse = gameFieldCellB.bottomRight.leftHouse;
 				break;
 
-		}
-	}
-
-	* [Symbol.iterator]() {
-		for (let i = 0; i < this.size; i++) {
-			yield new HexMapRow(this.size, this.radius, this.storage, i);
 		}
 	}
 }

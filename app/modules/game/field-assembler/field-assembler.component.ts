@@ -28,7 +28,6 @@ export class FieldAssemblerComponent implements OnInit, OnDestroy {
 		private gameFieldService: GameFieldService,
 		private gameScenarioService: GameScenarioService) {}
 
-
 	confirmFieldAssembled(): void {
 		this.gameScenarioService.nextGameState();
 

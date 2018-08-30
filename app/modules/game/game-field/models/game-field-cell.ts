@@ -17,10 +17,10 @@ export class GameFieldCell {
 
 	constructor(
 		public topLeft: GameFieldCellSide,
-		public top: GameFieldCellSide,
 		public topRight: GameFieldCellSide,
+		public left: GameFieldCellSide,
+		public right: GameFieldCellSide,
 		public bottomLeft: GameFieldCellSide,
-		public bottom: GameFieldCellSide,
 		public bottomRight: GameFieldCellSide
 	) {}
 }

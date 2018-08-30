@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class GameScenarioService {
 
-	gameState: GameState = GameState.START;
+	gameState: GameState = GameState.ASSEMBLE_FIELD;
 
 	nextGameState(): void {
 		this.gameState = this.nextState(this.gameState);
