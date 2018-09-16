@@ -1,8 +1,8 @@
 export enum GameFieldCellSidePosition {
-	TOP,
+	TOP_LEFT,
 	TOP_RIGHT,
-	BOTTOM_RIGHT,
-	BOTTOM,
+	LEFT,
+	RIGHT,
 	BOTTOM_LEFT,
-	TOP_LEFT
+	BOTTOM_RIGHT
 }

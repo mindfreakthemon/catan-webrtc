@@ -15,6 +15,7 @@ import { FieldAssemblerComponent } from './field-assembler/field-assembler.compo
 import { GameFieldService } from './game-field/services/game-field.service';
 import { GameFieldComponent } from './game-field/game-field.component';
 import { GameCellComponent } from './game-field/game-cell.component';
+import { GameCellSideComponent } from './game-field/game-cell-side.component';
 
 @NgModule({
 	imports: [
@@ -30,7 +31,8 @@ import { GameCellComponent } from './game-field/game-cell.component';
 		GameFieldComponent,
 		TokenSelectorConsoleComponent,
 		FieldAssemblerComponent,
-		GameCellComponent
+		GameCellComponent,
+		GameCellSideComponent
 	],
 
 	providers: [

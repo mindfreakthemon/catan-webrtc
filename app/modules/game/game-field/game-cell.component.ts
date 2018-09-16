@@ -1,7 +1,5 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { GameNodeService } from '../game/services/game-node.service';
-import { GameState } from '../game-scenario/enums/game-state.enum';
-import { PeerType } from '../../peer/peer/enums/peer-type.enum';
 import { HexMap } from './models/hex-map';
 import { GameFieldCell } from './models/game-field-cell';
 
@@ -11,9 +9,7 @@ import { GameFieldCell } from './models/game-field-cell';
 	templateUrl: 'tmpl/game-cell.html',
 	styleUrls: ['styles/game-cell.css']
 })
-export class GameCellComponent implements OnInit {
-
-	GameState = GameState;
+export class GameCellComponent {
 
 	@Input()
 	gameNodeService: GameNodeService;
@@ -24,7 +20,16 @@ export class GameCellComponent implements OnInit {
 	@Input()
 	hexMap: HexMap;
 
-	ngOnInit(): void {
+	@Input()
+	sizeCoefficient: number = 2;
 
+	@HostBinding('style.width.px')
+	private get width(): number {
+		return 38 * this.sizeCoefficient;
+	}
+
+	@HostBinding('style.height.px')
+	private get height(): number {
+		return 33 * this.sizeCoefficient;
 	}
 }
