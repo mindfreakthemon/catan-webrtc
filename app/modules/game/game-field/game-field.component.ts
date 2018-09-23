@@ -1,8 +1,5 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
-import { GameNodeService } from '../game/services/game-node.service';
-import { GameState } from '../game-scenario/enums/game-state.enum';
-import { PeerType } from '../../peer/peer/enums/peer-type.enum';
-import { HexMap } from './models/hex-map';
+import { Component, Input } from '@angular/core';
+import { GameFieldService } from './services/game-field.service';
 
 @Component({
 	moduleId: module.id,
@@ -10,20 +7,11 @@ import { HexMap } from './models/hex-map';
 	templateUrl: 'tmpl/game-field.html',
 	styleUrls: ['styles/game-field.css']
 })
-export class GameFieldComponent implements OnInit {
-
-	GameState = GameState;
+export class GameFieldComponent {
 
 	@Input()
-	gameNodeService: GameNodeService;
+	sizeCoefficient: number = 2;
 
-	@Input()
-	peerType: PeerType;
-
-	@Input()
-	hexMap: HexMap;
-
-	ngOnInit(): void {
-
+	constructor(public gameFieldService: GameFieldService) {
 	}
 }

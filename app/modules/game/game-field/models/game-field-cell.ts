@@ -5,6 +5,10 @@ export class GameFieldCell {
 	type?: GameFieldCellType;
 
 	constructor(
+		public i: number,
+		public j: number,
+		public r: number,
+		public q: number,
 		public topLeft: GameFieldCellSide,
 		public topRight: GameFieldCellSide,
 		public left: GameFieldCellSide,

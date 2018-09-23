@@ -6,16 +6,16 @@ import { GameScenarioService } from './game-scenario/services/game-scenario.serv
 import { PlayerModule } from '../player/player.module';
 import { LobbyComponent } from './lobby/lobby.component';
 import { PLAYERS_CONSTRAINTS } from '../player/player.config';
-import { GAME_CONFIGURATION } from './game.config';
+import { GAME_CONFIGURATION, GAME_FIELD_CONFIGURATION } from './game.config';
 import { TokenSelectorConsoleComponent } from './token-selector/token-selector-console.component';
 import { GameScreenComponent } from './game-screen/game-screen.component';
 import { GameSlaveService } from './game/services/game-slave.service';
 import { GameMasterService } from './game/services/game-master.service';
 import { FieldAssemblerComponent } from './field-assembler/field-assembler.component';
-import { GameFieldService } from './game-field/services/game-field.service';
 import { GameFieldComponent } from './game-field/game-field.component';
-import { GameCellComponent } from './game-field/game-cell.component';
-import { GameCellSideComponent } from './game-field/game-cell-side.component';
+import { GameFieldCellComponent } from './game-field/game-field-cell.component';
+import { GameFieldCellSideComponent } from './game-field/game-field-cell-side.component';
+import { GameFieldService } from './game-field/services/game-field.service';
 
 @NgModule({
 	imports: [
@@ -31,8 +31,8 @@ import { GameCellSideComponent } from './game-field/game-cell-side.component';
 		GameFieldComponent,
 		TokenSelectorConsoleComponent,
 		FieldAssemblerComponent,
-		GameCellComponent,
-		GameCellSideComponent
+		GameFieldCellComponent,
+		GameFieldCellSideComponent
 	],
 
 	providers: [
@@ -47,6 +47,12 @@ import { GameCellSideComponent } from './game-field/game-cell-side.component';
 			provide: PLAYERS_CONSTRAINTS,
 			useValue: {
 				playerLimit: 6
+			}
+		},
+		{
+			provide: GAME_FIELD_CONFIGURATION,
+			useValue: {
+				size: 7
 			}
 		},
 		GameMasterService,

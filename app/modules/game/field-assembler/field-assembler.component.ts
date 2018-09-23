@@ -3,8 +3,7 @@ import { GameNodeService } from '../game/services/game-node.service';
 import { PeerType } from '../../peer/peer/enums/peer-type.enum';
 import { GameScenarioService } from '../game-scenario/services/game-scenario.service';
 import { GameEvent } from '../game/enums/game-event.enum';
-import { GameFieldService} from '../game-field/services/game-field.service';
-import { HexMap } from '../game-field/models/hex-map';
+import { GameFieldService } from '../game-field/services/game-field.service';
 
 @Component({
 	moduleId: module.id,
@@ -20,7 +19,7 @@ export class FieldAssemblerComponent implements OnInit, OnDestroy {
 	@Input()
 	gameNodeService: GameNodeService;
 
-	hexMap: HexMap;
+	sizeCoefficient: number = 4;
 
 	private destroy = new EventEmitter();
 
@@ -35,8 +34,6 @@ export class FieldAssemblerComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-
-		this.hexMap = this.gameFieldService.generateField();
 	}
 
 	ngOnDestroy(): void {

@@ -1,24 +1,16 @@
 import { Component, HostBinding, Input } from '@angular/core';
-import { GameNodeService } from '../game/services/game-node.service';
-import { HexMap } from './models/hex-map';
 import { GameFieldCell } from './models/game-field-cell';
 
 @Component({
 	moduleId: module.id,
-	selector: 'game-cell',
-	templateUrl: 'tmpl/game-cell.html',
-	styleUrls: ['styles/game-cell.css']
+	selector: 'game-field-cell',
+	templateUrl: 'tmpl/game-field-cell.html',
+	styleUrls: ['styles/game-field-cell.css']
 })
-export class GameCellComponent {
-
-	@Input()
-	gameNodeService: GameNodeService;
+export class GameFieldCellComponent {
 
 	@Input()
 	cell: GameFieldCell;
-
-	@Input()
-	hexMap: HexMap;
 
 	@Input()
 	sizeCoefficient: number = 2;
@@ -32,4 +24,9 @@ export class GameCellComponent {
 	private get height(): number {
 		return 33 * this.sizeCoefficient;
 	}
+
+	// @HostBinding('style.margin.px')
+	// private get margin(): number {
+	// 	return -3.75 * this.sizeCoefficient;
+	// }
 }
