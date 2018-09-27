@@ -4,4 +4,4 @@ game-field('[sizeCoefficient]'='sizeCoefficient')
 
 
 form
-	input('type'='range', min=1, max=5, '[(ngModel)]'='sizeCoefficient', [ngModelOptions]="{standalone: true}")
+	input('type'='range', step='0.01', min='3', max='5', '[(ngModel)]'='sizeCoefficient', [ngModelOptions]="{standalone: true}")

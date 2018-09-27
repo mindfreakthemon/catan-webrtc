@@ -1,6 +1,3 @@
-.house
-.house.left {{ cellSide.leftHouse.connections }}
-//.road {{ cellSide.road.road }} {{ cellSide.connections }}-{{ cellSide.random }}
-.house.right {{ cellSide.leftHouse.connections }}
-.house
-
+game-field-cell-house.house.left('[house]'='cellSide.leftHouse', '[sizeCoefficient]'='sizeCoefficient')
+.road {{ cellSide.road.road }} {{ cellSide.road.connections }}-{{ cellSide.road.random }}
+game-field-cell-house.house.right('[house]'='cellSide.rightHouse', '[sizeCoefficient]'='sizeCoefficient')

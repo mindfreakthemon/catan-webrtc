@@ -1,50 +1,59 @@
 :host {
+	position: absolute;
+	top: 0;
+	left: 0;
+
 	display: flex;
+
+	z-index: 50;
 
 	/**
 		Do not display duplicate cell sides.
 	 */
-	//&.has-connections {
-	//	&.top-left,
-	//	&.bottom-left,
-	//	&.left {
-	//		visibility: hidden;
-	//	}
-	//}
+	&.has-connections {
+		&.top-left,
+		&.bottom-left,
+		&.left {
+			visibility: hidden;
+		}
+	}
 
 	/*
 		Display no houses in overlapping house holders.
 	 */
-	//&.left
-	//&.top-right,
-	//&.bottom-right {
-	//	.house {
-	//		visibility: hidden;
-	//	}
-	//}
+	&.left
+	&.top-right,
+	&.bottom-right {
+		.house {
+			visibility: hidden;
+		}
+	}
 
-	//&.bottom-left.has-no-connections {
-	//	.house.right {
-	//		visibility: hidden;
-	//	}
-	//}
+	&.top-left.has-no-connections {
+		.house.left.has-connections {
+			visibility: hidden;
+		}
+	}
+
+	&.bottom-left.has-no-connections {
+		.house.right.has-connections {
+			visibility: hidden;
+		}
+	}
 
 	/**
 		Display cell sides with house holders over other cell sides.
 	 */
-	//&.top-left,
-	//&.bottom-left,
-	//&.right {
-	//	position: relative;
-	//	z-index: 100;
-	//}
+	&.top-left,
+	&.bottom-left,
+	&.right {
+		z-index: 100;
+	}
 }
 
 .house {
 	width: 25%;
-
-	border-radius: 50%;
-	background: red;
+	margin: 0 -10px;
 }
 
 .road {

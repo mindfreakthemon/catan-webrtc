@@ -6,6 +6,16 @@ import { Inject, Injectable } from '@angular/core';
 import { GameFieldConfiguration } from '../models/game-field-configuration';
 import { GAME_FIELD_CONFIGURATION } from '../../game.config';
 import { GameFieldCellHouseHolder } from '../models/game-field-cell-house-holder';
+import { GameFieldCellType } from '../enums/game-field-cell-type.enum';
+
+interface GameFieldIteratorIndex {
+	firstRow: number;
+	lastRow: number;
+	firstColumn: number;
+	lastColumn: number;
+	r: number;
+	q: number;
+}
 
 @Injectable()
 export class GameFieldService {
@@ -26,36 +36,9 @@ export class GameFieldService {
 			}
 		}
 
-		const firstRow = this.firstRow();
-		const lastRow = size;
+		this.forEach((cell: GameFieldCell, index: GameFieldIteratorIndex) => this.connect(cell, index));
 
-		for (let r = firstRow; r < lastRow; r++) {
-			const firstColumn = this.firstColumn(r);
-			const lastColumn = this.lastColumn(r);
-
-			for (let q = firstColumn; q < lastColumn; q++) {
-				const cell = this.getRQ(r, q);
-
-				const lastColumnPrev = this.lastColumn(r - 1);
-				const firstColumnPrev = this.firstColumn(r - 1);
-
-				const lastColumnNext = this.lastColumn(r + 1);
-				const firstColumnNext = this.firstColumn(r + 1);
-
-				if (r > firstRow && q >= firstColumnPrev && q < lastColumnPrev) {
-					this.connect(this.getRQ(r - 1, q), cell, GameFieldCellSidePosition.TOP_LEFT);
-				}
-
-				if ((r + 1) < lastRow && (q - 1) >= firstColumnNext && (q - 1) < lastColumnNext) {
-					this.connect(this.getRQ(r + 1, q - 1), cell, GameFieldCellSidePosition.BOTTOM_LEFT);
-				}
-
-				if ((q - 1) >= firstColumn && (q - 1) < lastColumn) {
-					this.connect(this.getRQ(r, q - 1), cell, GameFieldCellSidePosition.LEFT);
-				}
-
-			}
-		}
+		this.generateTypes();
 	}
 
 	public getRQ(r: number, q: number): GameFieldCell {
@@ -71,7 +54,7 @@ export class GameFieldService {
 	}
 
 	public getQ(i: number, j: number): number {
-		return j;
+		return j + this.firstColumn(this.getR(i, j));
 	}
 
 	public getI(r: number, q: number): number {
@@ -92,6 +75,60 @@ export class GameFieldService {
 
 	public lastColumn(r: number): number {
 		return this.configuration.size -  Math.max(0, r - Math.floor(this.configuration.size / 2));
+	}
+
+	public get length(): number {
+		return 3 * Math.ceil(this.configuration.size / 2) * (Math.ceil(this.configuration.size / 2) - 1) + 1;
+	}
+
+	public generateTypes(): void {
+		const length = this.length;
+
+		const types: GameFieldCellType[] = Array(length);
+
+		const amountOfTypes = 5;
+		const amountOfDeserts = length % amountOfTypes;
+		const amountOfOtherTypes = Math.floor(length / amountOfTypes);
+
+		types.fill(GameFieldCellType.DESERT, 0, amountOfDeserts);
+
+		[
+			GameFieldCellType.CLAY,
+			GameFieldCellType.ROCK,
+			GameFieldCellType.SHEEP,
+			GameFieldCellType.WHEAT,
+			GameFieldCellType.WOOD
+		].forEach((type: GameFieldCellType, index: number) => {
+			const start = amountOfDeserts + index * amountOfOtherTypes;
+
+			types.fill(type, start, start + amountOfOtherTypes);
+		});
+
+		for (let i = types.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+
+			[types[i], types[j]] = [types[j], types[i]];
+		}
+
+		this.forEach((cell: GameFieldCell, index: GameFieldIteratorIndex) => cell.type = types.shift());
+
+	}
+
+	public forEach(fn: (cell: GameFieldCell, index: GameFieldIteratorIndex) => void): void {
+
+		const firstRow = this.firstRow();
+		const lastRow = this.configuration.size;
+
+		for (let r = firstRow; r < lastRow; r++) {
+			const firstColumn = this.firstColumn(r);
+			const lastColumn = this.lastColumn(r);
+
+			for (let q = firstColumn; q < lastColumn; q++) {
+				const cell = this.getRQ(r, q);
+
+				fn(cell, { firstRow, lastRow, firstColumn, lastColumn, r, q });
+			}
+		}
 	}
 
 	* [Symbol.iterator]() {
@@ -138,103 +175,152 @@ export class GameFieldService {
 		const bottomLeftSide = new GameFieldCellSide(GameFieldCellSidePosition.BOTTOM_LEFT, bottomHouse, bottomLeftRoad, bottomLeftHouse);
 		const bottomRightSide = new GameFieldCellSide(GameFieldCellSidePosition.BOTTOM_RIGHT, bottomRightHouse, rightBottomRoad, bottomHouse);
 
-		topHouse.connectedLeft.push(topRightSide);
-		topHouse.connectedRight.push(topLeftSide);
-
-		topLeftHouse.connectedLeft.push(topLeftSide);
-		topLeftHouse.connectedRight.push(leftSide);
-
-		topRightHouse.connectedLeft.push(topRightSide);
-		topRightHouse.connectedRight.push(rightSide);
-
-		bottomLeftHouse.connectedLeft.push(leftSide);
-		bottomLeftHouse.connectedRight.push(bottomLeftSide);
-
-		bottomRightHouse.connectedLeft.push(bottomRightSide);
-		bottomRightHouse.connectedRight.push(rightSide);
-
-		bottomHouse.connectedLeft.push(bottomLeftSide);
-		bottomHouse.connectedRight.push(bottomRightSide);
-
-		const q = this.getQ(i, j);
-		const r = this.getR(i, j);
-
-		return new GameFieldCell(i, j, r, q, topLeftSide, topRightSide, leftSide, rightSide, bottomLeftSide, bottomRightSide);
+		return new GameFieldCell(
+			this.getR(i, j), this.getQ(i, j), topLeftSide, topRightSide, leftSide, rightSide, bottomLeftSide, bottomRightSide);
 	}
 
-	/**
-	 *
-	 * @param gameFieldCellA - Gets overwritten by values of gameFieldCellB
-	 * @param gameFieldCellB - Gets copied from to gameFieldCellA
-	 * @param position - Where to join
-	 */
-	private connect(gameFieldCellA: GameFieldCell, gameFieldCellB: GameFieldCell, position: GameFieldCellSidePosition): void {
+	private connect(cell: GameFieldCell, index: GameFieldIteratorIndex): void {
+		const { r, q, firstColumn, lastColumn, firstRow, lastRow } = index;
 
-		switch (position) {
-			case GameFieldCellSidePosition.TOP_LEFT:
-				this.copy(gameFieldCellA.bottomRight, gameFieldCellB.topLeft);
-				break;
+		const lastColumnPrev = this.lastColumn(r - 1);
+		const firstColumnPrev = this.firstColumn(r - 1);
 
-			case GameFieldCellSidePosition.BOTTOM_LEFT:
-				this.copy(gameFieldCellA.topRight, gameFieldCellB.bottomLeft);
-				break;
+		const lastColumnNext = this.lastColumn(r + 1);
+		const firstColumnNext = this.firstColumn(r + 1);
 
-			case GameFieldCellSidePosition.LEFT:
-				this.copy(gameFieldCellA.right, gameFieldCellB.left);
-				break;
+		/**
+		 * Connect Roads
+		 */
+		if (r > firstRow && q >= firstColumnPrev && q < lastColumnPrev) {
+			const topLeftCell = this.getRQ(r - 1, q);
 
-			case GameFieldCellSidePosition.RIGHT:
-			case GameFieldCellSidePosition.BOTTOM_RIGHT:
-			case GameFieldCellSidePosition.TOP_RIGHT:
-				// not necessary
-				break;
+			this.copyRoad(topLeftCell.bottomRight, cell.topLeft);
+		}
 
+		if ((r + 1) < lastRow && (q - 1) >= firstColumnNext && (q - 1) < lastColumnNext) {
+			const bottomLeftCell = this.getRQ(r + 1, q - 1);
+
+			this.copyRoad(bottomLeftCell.topRight, cell.bottomLeft);
+		}
+
+		if ((q - 1) >= firstColumn && (q - 1) < lastColumn) {
+			const leftCell = this.getRQ(r, q - 1);
+
+			this.copyRoad(leftCell.right, cell.left);
+		}
+
+		/**
+		 * Connect Houses
+		 */
+		// middle top
+		if (q > firstColumn) {
+			const house = new GameFieldCellHouseHolder();
+
+			const leftCell = this.getRQ(r, q - 1);
+
+			cell.topLeft.leftHouse = house;
+			cell.left.rightHouse = house;
+			leftCell.topRight.rightHouse = house;
+			leftCell.right.leftHouse = house;
+
+			if (r > firstRow) {
+				const topLeftCell = this.getRQ(r - 1, q);
+
+				topLeftCell.bottomRight.rightHouse = house;
+				topLeftCell.bottomLeft.leftHouse = house;
+			}
+
+			house.connections++;
+		}
+
+		// middle bottom
+		if (q > firstColumn) {
+			const house = new GameFieldCellHouseHolder();
+
+			const leftCell = this.getRQ(r, q - 1);
+
+			cell.bottomLeft.rightHouse = house;
+			cell.left.leftHouse = house;
+			leftCell.bottomRight.leftHouse = house;
+			leftCell.right.rightHouse = house;
+
+			if ((r + 1) < lastRow) {
+				const bottomLeftCell = this.getRQ(r + 1, q - 1);
+
+				bottomLeftCell.topRight.leftHouse = house;
+				bottomLeftCell.topLeft.rightHouse = house;
+			}
+
+			house.connections++;
+		}
+
+		// boundary left top
+		if (q === firstColumn && (q - 1) === firstColumnNext) {
+			const house = new GameFieldCellHouseHolder();
+
+			const bottomLeftCell = this.getRQ(r + 1, q - 1);
+
+			cell.bottomLeft.rightHouse = house;
+			cell.left.leftHouse = house;
+			bottomLeftCell.topRight.leftHouse = house;
+			bottomLeftCell.topLeft.rightHouse = house;
+
+			house.connections++;
+		}
+
+		// boundary left bottom
+		if ((r + 1) < lastRow && q === firstColumn && q === firstColumnNext) {
+			const house = new GameFieldCellHouseHolder();
+
+			const bottomRightCell = this.getRQ(r + 1, q);
+
+			cell.bottomRight.rightHouse = house;
+			cell.bottomLeft.leftHouse = house;
+			bottomRightCell.topLeft.leftHouse = house;
+			bottomRightCell.left.rightHouse = house;
+
+			house.connections++;
+		}
+
+		// boundary right top
+		if ((q + 1) === lastColumn && (q + 1) === lastColumnNext) {
+			const house = new GameFieldCellHouseHolder();
+
+			const bottomRightCell = this.getRQ(r + 1, q);
+
+			cell.bottomRight.leftHouse = house;
+			cell.right.rightHouse = house;
+			bottomRightCell.topRight.leftHouse = house;
+			bottomRightCell.topLeft.rightHouse = house;
+
+			house.connections++;
+		}
+
+		// boundary right bottom
+		if ((r + 1) < lastRow && (q + 1) === lastColumn && q === lastColumnNext) {
+			const house = new GameFieldCellHouseHolder();
+
+			const bottomLeftCell = this.getRQ(r + 1, q - 1);
+
+			cell.bottomRight.rightHouse  = house;
+			cell.bottomLeft.leftHouse = house;
+			bottomLeftCell.topRight.rightHouse = house;
+			bottomLeftCell.right.leftHouse = house;
+
+			house.connections++;
 		}
 	}
 
-	private copy(gameFieldCellSideA: GameFieldCellSide, gameFieldCellSideB: GameFieldCellSide): void {
-		gameFieldCellSideA.random = gameFieldCellSideB.random;
-		gameFieldCellSideA.color = gameFieldCellSideB.color;
-
-		for (let gameFieldCellSide of gameFieldCellSideA.leftHouse.connectedLeft) {
-			gameFieldCellSide.leftHouse = gameFieldCellSideB.leftHouse;
-		}
-
-		gameFieldCellSideB.leftHouse.connectedLeft.push(...gameFieldCellSideA.leftHouse.connectedLeft);
-
-		for (let gameFieldCellSide of gameFieldCellSideA.leftHouse.connectedRight) {
-			gameFieldCellSide.rightHouse = gameFieldCellSideB.leftHouse;
-		}
-
-		gameFieldCellSideB.leftHouse.connectedLeft.push(...gameFieldCellSideA.leftHouse.connectedRight);
-
-		gameFieldCellSideB.leftHouse.connections++;
-
-		for (let gameFieldCellSide of gameFieldCellSideA.road.connected) {
-			gameFieldCellSide.road = gameFieldCellSideB.road;
-		}
+	private copyRoad(gameFieldCellSideA: GameFieldCellSide, gameFieldCellSideB: GameFieldCellSide): void {
+		gameFieldCellSideA.road.random = gameFieldCellSideB.road.random;
+		gameFieldCellSideA.road.color = gameFieldCellSideB.road.color;
 
 		gameFieldCellSideA.road = gameFieldCellSideB.road;
 
 		gameFieldCellSideA.road.connections++;
-
-		for (let gameFieldCellSide of gameFieldCellSideA.rightHouse.connectedLeft) {
-			gameFieldCellSide.leftHouse = gameFieldCellSideB.rightHouse;
-
-		}
-
-		gameFieldCellSideB.rightHouse.connectedLeft.push(...gameFieldCellSideA.rightHouse.connectedLeft);
-
-		for (let gameFieldCellSide of gameFieldCellSideA.rightHouse.connectedRight) {
-			gameFieldCellSide.rightHouse = gameFieldCellSideB.rightHouse;
-		}
-
-		gameFieldCellSideB.rightHouse.connectedRight.push(...gameFieldCellSideA.rightHouse.connectedRight);
-
-
-		gameFieldCellSideB.rightHouse.connections++;
-
-		gameFieldCellSideA.connections++;
-		gameFieldCellSideB.connections++;
 	}
+
+	// private copyHouse(...houses: GameFieldCellHouseHolder[]): void {
+	//
+	// }
 }

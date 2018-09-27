@@ -18,17 +18,13 @@ export class GameFieldCellSideComponent {
 	sizeCoefficient: number = 2;
 
 	private transformMatrix: number[][] = [
-		[-30, -15, 0],
-		[30, 3, 0],
-		[-90, -10, -20],
-		[90, 5, -10],
-		[-150, 4, -18],
-		[150, 2, -8]
+		[-30, -2.5, 2],
+		[30, 15, -6],
+		[-90, -70 / 4, -9],
+		[90,  70 / 4, -96 / 4],
+		[-150, -15, -29],
+		[150, 2, -144 / 4]
 	];
-
-	private translateXOrigin: number = 14;
-
-	private translateYOrigin: number = -5;
 
 	@HostBinding('style.width.px')
 	private get width(): number {
@@ -46,16 +42,9 @@ export class GameFieldCellSideComponent {
 		const rotate = this.transformMatrix[position][0];
 		const translateX = this.transformMatrix[position][1] * this.sizeCoefficient;
 		const translateY = this.transformMatrix[position][2] * this.sizeCoefficient;
-		const translateXOrigin = this.translateXOrigin * this.sizeCoefficient;
-		const translateYOrigin = this.translateYOrigin * this.sizeCoefficient;
 
 		return this.sanitizer.bypassSecurityTrustStyle(
-			`translate(${translateXOrigin}px, ${translateYOrigin}px) rotate(${rotate}deg) translate(${translateX}px, ${translateY}px)`);
-	}
-
-	@HostBinding('style.background-color')
-	private get color(): string {
-		return this.cellSide.color;
+			`rotate(${rotate}deg) translate(${translateX}px, ${translateY}px)`);
 	}
 
 	@HostBinding('class.top-left')
@@ -90,12 +79,12 @@ export class GameFieldCellSideComponent {
 
 	@HostBinding('class.has-no-connections')
 	private get hasNoConnections(): boolean {
-		return this.cellSide.connections === 0;
+		return this.cellSide.road.connections === 0;
 	}
 
 	@HostBinding('class.has-connections')
 	private get hasConnections(): boolean {
-		return this.cellSide.connections > 0;
+		return this.cellSide.road.connections > 0;
 	}
 
 	constructor(private sanitizer: DomSanitizer) {
