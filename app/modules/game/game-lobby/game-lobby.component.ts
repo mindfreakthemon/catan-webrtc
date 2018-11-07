@@ -1,19 +1,17 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
-import { Broadcast } from '../../player/player/enums/broadcast.enum';
-import { Player } from '../../player/player/models/player';
 import { PeerType } from '../../peer/peer/enums/peer-type.enum';
-import { PeerId } from '../../peer/peer/models/peer-id';
 import { GameNodeService } from '../game/services/game-node.service';
 import { GameScenarioService } from '../game-scenario/services/game-scenario.service';
 import { GameEvent } from '../game/enums/game-event.enum';
+import { Broadcast, PeerId, Player } from '../game.dependencies';
 
 @Component({
 	moduleId: module.id,
-	selector: 'lobby',
-	templateUrl: 'tmpl/lobby.html',
-	styleUrls: ['styles/lobby.css']
+	selector: 'game-lobby',
+	templateUrl: 'tmpl/game-lobby.html',
+	styleUrls: ['styles/game-lobby.css']
 })
-export class LobbyComponent implements OnInit, OnDestroy {
+export class GameLobbyComponent implements OnInit, OnDestroy {
 
 	PeerType = PeerType;
 
@@ -36,7 +34,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 	start(): void {
 		this.gameScenarioService.nextGameState();
 
-		this.gameNodeService.broadcast(GameEvent.CHANGE_STATE, this.gameScenarioService.gameState);
+		this.gameNodeService.broadcast(GameEvent.CHANGE_STATE, this.gameScenarioService.getGameState());
 	}
 
 	ngOnInit(): void {

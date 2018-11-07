@@ -2,15 +2,17 @@ import { GameNodeService } from './game-node.service';
 import { Inject, Injectable } from '@angular/core';
 import { GameConfiguration } from '../models/game-configuration';
 import { GAME_CONFIGURATION } from '../../game.config';
-import { PlayerMasterService } from '../../../player/player/services/player-master.service';
-import { PeerId } from '../../../peer/peer/models/peer-id';
 import { PlayerToken } from '../enums/player-token.enum';
 import { GameEvent } from '../enums/game-event.enum';
+import { GameDiceRoll } from '../../game-dice-roller/models/game-dice-roll';
+import { Broadcast, PeerId, PlayerMasterService } from '../../game.dependencies';
 
 @Injectable()
 export class GameMasterService extends GameNodeService {
 
-	playerTokens = new Map<PeerId, PlayerToken>();
+	public playerTokens = new Map<PeerId, PlayerToken>();
+
+	public playerStartDiceRolls = new Map<PeerId, GameDiceRoll>();
 
 	constructor(
 		@Inject(GAME_CONFIGURATION)
@@ -24,15 +26,18 @@ export class GameMasterService extends GameNodeService {
 			.subscribe(({ peer, data }) => this.handleData(peer, data));
 	}
 
-	broadcast(gameEvent: GameEvent, data: any): void {
-		this.playerNodeService.peerNodeService.broadcast({ gameEvent, data });
+	public broadcast(gameEvent: GameEvent, data: any): void {
+		this.playerNodeService.broadcast(Broadcast.GAME_EVENT,{ gameEvent, data });
 	}
 
-	broadcastPlayerTokens(): void {
+
+	// region playerTokens
+
+	public broadcastPlayerTokens(): void {
 		this.broadcast(GameEvent.PLAYER_TOKEN_LIST_UPDATE, Array.from(this.playerTokens));
 	}
 
-	registerPlayerToken(playerToken: PlayerToken, peerId: PeerId = this.id): Promise<boolean> {
+	public registerPlayerToken(playerToken: PlayerToken, peerId: PeerId = this.id): Promise<boolean> {
 		if (Array.from(this.playerTokens.values()).includes(playerToken)) {
 			if (this.playerTokens.get(peerId) !== playerToken) {
 				return Promise.resolve(false);
@@ -43,12 +48,34 @@ export class GameMasterService extends GameNodeService {
 
 		this.broadcastPlayerTokens();
 
-		return Promise.resolve(false);
+		return Promise.resolve(true);
 	}
 
-	getPlayerTokens(): Promise<any> {
+	public getPlayerTokens(): Promise<any> {
 		return Promise.resolve(Array.from(this.playerTokens));
 	}
+
+	// endregion
+
+	// region playerStartDiceRolls
+
+	public broadcastPlayerStartDiceRolls(): void {
+		this.broadcast(GameEvent.PLAYER_START_DICE_ROLL_UPDATE, Array.from(this.playerStartDiceRolls));
+	}
+
+	public registerPlayerStartDiceRoll(playerGameDiceRoll: GameDiceRoll, peerId: PeerId = this.id): Promise<boolean> {
+		this.playerStartDiceRolls.set(peerId, playerGameDiceRoll);
+
+		this.broadcastPlayerStartDiceRolls();
+
+		return Promise.resolve(true);
+	}
+
+	public getPlayerStartDiceRoll(): Promise<[PeerId, GameDiceRoll][]> {
+		return Promise.resolve(Array.from(this.playerStartDiceRolls));
+	}
+
+	// endregion
 
 	private handleData(peerId: PeerId, data: any): void {
 		if (data.method) {

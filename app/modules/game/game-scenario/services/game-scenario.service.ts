@@ -4,14 +4,18 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class GameScenarioService {
 
-	gameState: GameState = GameState.ASSEMBLE_FIELD;
+	private gameState: GameState = GameState.START_DICE_ROLL;
 
-	nextGameState(): void {
+	public nextGameState(): void {
 		this.gameState = this.nextState(this.gameState);
 	}
 
-	resetGameState(state: GameState = GameState.START): void {
+	public resetGameState(state: GameState = GameState.START): void {
 		this.gameState = state;
+	}
+
+	public getGameState(): GameState {
+		return this.gameState;
 	}
 
 	private nextState(currentState: GameState): GameState {
@@ -32,9 +36,9 @@ export class GameScenarioService {
 				return GameState.ASSEMBLE_FIELD;
 
 			case GameState.ASSEMBLE_FIELD:
-				return GameState.ROLL_DICE;
+				return GameState.START_DICE_ROLL;
 
-			case GameState.ROLL_DICE:
+			case GameState.START_DICE_ROLL:
 				return GameState.END;
 
 			default:

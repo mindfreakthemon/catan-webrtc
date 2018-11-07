@@ -1,19 +1,18 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
 import { PlayerToken } from '../game/enums/player-token.enum';
 import { GameNodeService } from '../game/services/game-node.service';
-import { Player } from '../../player/player/models/player';
 import { GameEvent } from '../game/enums/game-event.enum';
-import { PeerId } from '../../peer/peer/models/peer-id';
 import { PeerType } from '../../peer/peer/enums/peer-type.enum';
 import { GameScenarioService } from '../game-scenario/services/game-scenario.service';
+import { PeerId, Player } from '../game.dependencies';
 
 @Component({
 	moduleId: module.id,
-	selector: 'token-selector-console',
-	templateUrl: 'tmpl/token-selector-console.html',
-	styleUrls: ['styles/token-selector-console.css']
+	selector: 'game-token-selector',
+	templateUrl: 'tmpl/game-token-selector.html',
+	styleUrls: ['styles/game-token-selector.css']
 })
-export class TokenSelectorConsoleComponent implements OnInit, OnDestroy {
+export class GameTokenSelectorComponent implements OnInit, OnDestroy {
 
 	PeerType = PeerType;
 
@@ -57,7 +56,7 @@ export class TokenSelectorConsoleComponent implements OnInit, OnDestroy {
 	confirmTokenSelection(): void {
 		this.gameScenarioService.nextGameState();
 
-		this.gameNodeService.broadcast(GameEvent.CHANGE_STATE, this.gameScenarioService.gameState);
+		this.gameNodeService.broadcast(GameEvent.CHANGE_STATE, this.gameScenarioService.getGameState());
 	}
 
 	ngOnInit(): void {

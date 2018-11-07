@@ -8,6 +8,8 @@ import { GameMasterService } from '../modules/game/game/services/game-master.ser
 import { GameSlaveService } from '../modules/game/game/services/game-slave.service';
 import 'rxjs/add/operator/takeUntil';
 import { GameEvent } from '../modules/game/game/enums/game-event.enum';
+import { GameContextService } from '../modules/game/game/services/game-context.service';
+import { PlayerToken } from '../modules/game/game/enums/player-token.enum';
 
 @Component({
 	moduleId: module.id,
@@ -28,9 +30,14 @@ export class MainComponent {
 	private destroy = new EventEmitter();
 
 	constructor(
+		private gameContextService: GameContextService,
 		private gameScenarioService: GameScenarioService,
 		private injector: Injector
 	) {
+		// @TODO remove
+		this.setupPeer(PeerType.MASTER);
+		this.gameNodeService.playerNodeService.registerPlayer({ name: 'nice' });
+		this.gameNodeService.registerPlayerToken(PlayerToken.BLUE);
 	}
 
 	setupPeer(peerType: PeerType): void {
@@ -55,6 +62,8 @@ export class MainComponent {
 				return;
 		}
 
+		this.gameContextService.setService(this.gameNodeService);
+
 		this.gameNodeService.connect();
 
 		this.gameNodeService.playerNodeService.addBroadcastListener(Broadcast.PLAYER_EJECTED)
@@ -69,7 +78,7 @@ export class MainComponent {
 			.takeUntil(this.destroy)
 			.subscribe((gameState) => this.gameScenarioService.resetGameState(gameState));
 
-		this.gameScenarioService.nextGameState();
+		// this.gameScenarioService.nextGameState();
 	}
 
 	handlePlayerCreated(): void {

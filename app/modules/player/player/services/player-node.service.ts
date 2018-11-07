@@ -1,19 +1,18 @@
-import { EventEmitter, Inject, Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Broadcast } from '../enums/broadcast.enum';
 import { Observable } from 'rxjs/Observable';
 import { Player } from '../models/player';
-import { PeerNodeService } from '../../../peer/peer/services/peer-node.service';
 import { PlayersConstraints } from '../models/players-constraints';
 import { PLAYERS_CONSTRAINTS } from '../../player.config';
-import { PeerId } from '../../../peer/peer/models/peer-id';
+import { PeerId, PeerNodeService } from '../../player.dependencies';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 
 @Injectable()
 export abstract class PlayerNodeService {
 
-	get events(): EventEmitter<any> {
-		return this.peerNodeService.dataBeacon;
+	get events(): Observable<any> {
+		return this.peerNodeService.events;
 	}
 
 	get id(): PeerId {
@@ -38,8 +37,6 @@ export abstract class PlayerNodeService {
 	abstract registerPlayer(player: Player): Promise<boolean>;
 
 	abstract unregisterPlayer(peerId: PeerId): void;
-
-	abstract sendGameEvent(data: any): void;
 
 	abstract getAllPlayers(): Promise<Player[]>;
 

@@ -1,12 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
-import { PeerMasterService } from '../../../peer/peer/services/peer-master.service';
 import { PlayerNodeService } from './player-node.service';
 import { Broadcast } from '../enums/broadcast.enum';
 import { Player } from '../models/player';
-import { PeerId } from '../../../peer/peer/models/peer-id';
 import { PLAYERS_CONSTRAINTS } from '../../player.config';
 import { PlayersConstraints } from '../models/players-constraints';
 import { PlayerNodeCall } from '../models/player-node-call';
+import { PeerId, PeerMasterService } from '../../player.dependencies';
 
 @Injectable()
 export class PlayerMasterService extends PlayerNodeService {
@@ -27,7 +26,11 @@ export class PlayerMasterService extends PlayerNodeService {
 			.subscribe(({ peer, data }) => this.handleData(peer, data));
 	}
 
-	registerPlayer(player: Player, peerId: PeerId = this.id): Promise<boolean> {
+	public broadcast(broadcast: Broadcast, data: any): void {
+		this.peerNodeService.broadcast({ broadcast, data });
+	}
+
+	public registerPlayer(player: Player, peerId: PeerId = this.id): Promise<boolean> {
 		if (this.players.has(peerId)) {
 			return Promise.resolve(true);
 		}
@@ -45,7 +48,7 @@ export class PlayerMasterService extends PlayerNodeService {
 		return Promise.resolve(true);
 	}
 
-	unregisterPlayer(peerId: PeerId): void {
+	public unregisterPlayer(peerId: PeerId): void {
 		this.players.delete(peerId);
 
 		this.broadcast(Broadcast.PLAYER_EJECTED, peerId);
@@ -53,11 +56,7 @@ export class PlayerMasterService extends PlayerNodeService {
 		this.broadcast(Broadcast.PLAYER_LIST_UPDATED, Array.from(this.players.values()));
 	}
 
-	sendGameEvent(data: any): void {
-		this.broadcast(Broadcast.GAME_EVENT, data);
-	}
-
-	getAllPlayers(): Promise<Player[]> {
+	public getAllPlayers(): Promise<Player[]> {
 		return Promise.resolve(Array.from(this.players.values()));
 	}
 
@@ -76,7 +75,4 @@ export class PlayerMasterService extends PlayerNodeService {
 		this.broadcast(Broadcast.PLAYER_DISCONNECTED, peerId);
 	}
 
-	private broadcast(broadcast: Broadcast, data: any): void {
-		this.peerNodeService.broadcast({ broadcast, data });
-	}
 }

@@ -1,0 +1,7 @@
+h2 First DIce Roll Selector
+
+ng-container('*ngIf'='players && playerStartDiceRolls')
+	.btn-groupd
+		button.btn.btn-small('*ngFor'='let player of players') {{ player.name }} ===> {{ playerStartDiceRolls.get(player.peerId) }}
+
+

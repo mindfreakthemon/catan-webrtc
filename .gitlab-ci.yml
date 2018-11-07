@@ -1,0 +1,22 @@
+image: node:10.13.0-alpine
+
+build:
+  stage: build
+  script:
+    - npm install
+    - npx gulp compile:bundle
+  cache:
+    paths:
+      - node_modules/
+  artifacts:
+    paths:
+      - build
+
+pages:
+  image: alpine:3.8
+  stage: deploy
+  script:
+    - mv build public
+  artifacts:
+    paths:
+      - public

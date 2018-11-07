@@ -4,37 +4,51 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { GameScenarioService } from './game-scenario/services/game-scenario.service';
 import { PlayerModule } from '../player/player.module';
-import { LobbyComponent } from './lobby/lobby.component';
+import { PeerModule } from '../peer/peer.module';
+import { GameLobbyComponent } from './game-lobby/game-lobby.component';
 import { PLAYERS_CONSTRAINTS } from '../player/player.config';
 import { GAME_CONFIGURATION, GAME_FIELD_CONFIGURATION } from './game.config';
-import { TokenSelectorConsoleComponent } from './token-selector/token-selector-console.component';
+import { GameTokenSelectorComponent } from './game-token-selector/game-token-selector.component';
 import { GameScreenComponent } from './game-screen/game-screen.component';
 import { GameSlaveService } from './game/services/game-slave.service';
 import { GameMasterService } from './game/services/game-master.service';
-import { FieldAssemblerComponent } from './field-assembler/field-assembler.component';
+import { GameFieldAssemblerComponent } from './game-field-assembler/game-field-assembler.component';
 import { GameFieldComponent } from './game-field/game-field.component';
 import { GameFieldCellComponent } from './game-field/game-field-cell.component';
 import { GameFieldCellSideComponent } from './game-field/game-field-cell-side.component';
 import { GameFieldService } from './game-field/services/game-field.service';
 import { GameFieldCellHouseComponent } from './game-field/game-field-cell-house.component';
+import { GameWelcomeScreenComponent } from './game-welcome-screen/game-welcome-screen.component';
+import { GameDiceRollerScreenComponent } from './game-dice-roller/game-dice-roller-screen.component';
+import { GameDiceRollerComponent } from './game-dice-roller/game-dice-roller.component';
+import { GameContextService } from './game/services/game-context.service';
+import { GameDiceRollerSelectorComponent } from './game-dice-roller/game-dice-roller-selector.component';
+import { GamePlayerOrderService } from './game-player-order/services/game-player-order.service';
+
+export * from './game.dependencies';
 
 @NgModule({
 	imports: [
 		BrowserModule,
 		FormsModule,
 		CommonModule,
+		PeerModule,
 		PlayerModule
 	],
 
 	declarations: [
-		LobbyComponent,
+		GameLobbyComponent,
 		GameScreenComponent,
 		GameFieldComponent,
-		TokenSelectorConsoleComponent,
-		FieldAssemblerComponent,
+		GameWelcomeScreenComponent,
+		GameTokenSelectorComponent,
+		GameFieldAssemblerComponent,
 		GameFieldCellComponent,
 		GameFieldCellSideComponent,
-		GameFieldCellHouseComponent
+		GameFieldCellHouseComponent,
+		GameDiceRollerComponent,
+		GameDiceRollerScreenComponent,
+		GameDiceRollerSelectorComponent
 	],
 
 	providers: [
@@ -42,7 +56,8 @@ import { GameFieldCellHouseComponent } from './game-field/game-field-cell-house.
 			provide: GAME_CONFIGURATION,
 			useValue: {
 				minPlayers: 2,
-				maxPlayers: 6
+				maxPlayers: 6,
+				cardsPerStack: 25
 			}
 		},
 		{
@@ -60,15 +75,17 @@ import { GameFieldCellHouseComponent } from './game-field/game-field-cell-house.
 		GameMasterService,
 		GameSlaveService,
 		GameScenarioService,
-		GameFieldService
+		GameFieldService,
+		GameContextService,
+		GamePlayerOrderService
 	],
 
 	exports: [
-		LobbyComponent,
+		GameLobbyComponent,
 		GameScreenComponent,
 		GameFieldComponent,
-		TokenSelectorConsoleComponent,
-		FieldAssemblerComponent
+		GameTokenSelectorComponent,
+		GameFieldAssemblerComponent
 	]
 })
 export class GameModule {

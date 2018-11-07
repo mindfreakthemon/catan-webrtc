@@ -9,8 +9,9 @@ export class PeerMasterService extends PeerNodeService {
 
 	constructor(
 		@Inject(PEER_CONFIG)
-			private peerConfig: PeerJs.PeerJSOption,
-			ngZone: NgZone) {
+		private peerConfig: PeerJs.PeerJSOption,
+		ngZone: NgZone
+	) {
 
 		super(ngZone);
 	}
@@ -81,6 +82,6 @@ export class PeerMasterService extends PeerNodeService {
 	broadcast(data: any): void {
 		this.connections.forEach((connection) => connection.send(data));
 
-		this.dataBeacon.emit({ peer: 'master', data });
+		this.events.emit({ peer: 'master', data });
 	}
 }

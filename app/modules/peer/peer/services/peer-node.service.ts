@@ -3,7 +3,7 @@ import { PeerId } from '../models/peer-id';
 
 export abstract class PeerNodeService {
 
-	id: PeerId;
+	id: PeerId = 'master';
 
 	peer: PeerJs.Peer;
 
@@ -19,9 +19,9 @@ export abstract class PeerNodeService {
 
 	connectingBeacon = new EventEmitter<PeerId>();
 
-	dataBeacon = new EventEmitter();
+	events = new EventEmitter<any>();
 
-	constructor(protected ngZone: NgZone) {}
+	protected constructor(protected ngZone: NgZone) {}
 
 	get isSignalingConnected(): boolean {
 		return !this.peer.disconnected;
@@ -44,7 +44,7 @@ export abstract class PeerNodeService {
 	handleData(peerId: PeerId, data: any): void {
 		console.log('received data from %s: %j', peerId, data);
 
-		this.ngZone.run(() => this.dataBeacon.emit({ peer: peerId, data }));
+		this.ngZone.run(() => this.events.emit({ peer: peerId, data }));
 	}
 
 	handleSignalingConnect(peerId: PeerId): void {

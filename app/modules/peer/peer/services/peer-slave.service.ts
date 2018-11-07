@@ -15,8 +15,9 @@ export class PeerSlaveService extends PeerNodeService {
 
 	constructor(
 		@Inject(PEER_CONFIG)
-			public peerConfig: PeerJs.PeerJSOption,
-			ngZone: NgZone) {
+		public peerConfig: PeerJs.PeerJSOption,
+		ngZone: NgZone
+	) {
 
 		super(ngZone);
 	}

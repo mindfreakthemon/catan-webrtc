@@ -1,0 +1,7 @@
+game-dice-roller-selector()
+
+ng-container('*ngIf'='!hasStartDiceRolled')
+	game-dice-roller('(gameDiceRoll)'='handleGameDiceRoll($event)')
+
+ng-container('*ngIf'='hasStartDiceRolled')
+	button('(click)'='handleDone()') Start assigning stuff.

@@ -7,11 +7,11 @@ import { GameFieldService } from '../game-field/services/game-field.service';
 
 @Component({
 	moduleId: module.id,
-	selector: 'field-assembler',
-	templateUrl: 'tmpl/field-assembler.html',
-	styleUrls: ['styles/field-assembler.css']
+	selector: 'game-field-assembler',
+	templateUrl: 'tmpl/game-field-assembler.html',
+	styleUrls: ['styles/game-field-assembler.css']
 })
-export class FieldAssemblerComponent implements OnInit, OnDestroy {
+export class GameFieldAssemblerComponent implements OnInit, OnDestroy {
 
 	@Input()
 	peerType: PeerType;
@@ -30,7 +30,7 @@ export class FieldAssemblerComponent implements OnInit, OnDestroy {
 	confirmFieldAssembled(): void {
 		this.gameScenarioService.nextGameState();
 
-		this.gameNodeService.broadcast(GameEvent.CHANGE_STATE, this.gameScenarioService.gameState);
+		this.gameNodeService.broadcast(GameEvent.CHANGE_STATE, this.gameScenarioService.getGameState());
 	}
 
 	ngOnInit(): void {

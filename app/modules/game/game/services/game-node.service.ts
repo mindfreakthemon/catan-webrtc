@@ -1,22 +1,26 @@
-import { EventEmitter, Inject, Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { GAME_CONFIGURATION } from '../../game.config';
 import { GameConfiguration } from '../models/game-configuration';
 import { PlayerNodeService } from '../../../player/player/services/player-node.service';
-import { Broadcast } from '../../../player/player/enums/broadcast.enum';
 import { GameEvent } from '../enums/game-event.enum';
 import { Observable } from 'rxjs/Observable';
-import { PeerId } from '../../../peer/peer/models/peer-id';
 import { PlayerToken } from '../enums/player-token.enum';
+import { GameDiceRoll } from '../../game-dice-roller/models/game-dice-roll';
+import { Broadcast, PeerId } from '../../game.dependencies';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/filter';
 
 @Injectable()
 export abstract class GameNodeService {
 
-	get id(): PeerId {
+	public get id(): PeerId {
 		return this.playerNodeService.id;
 	}
 
-	get events(): EventEmitter<any> {
-		return this.playerNodeService.events;
+	public get events(): Observable<any> {
+		return this.playerNodeService.events
+			.filter((event: any) => event.data.broadcast === Broadcast.GAME_EVENT)
+			.map((event) => event.data.data);
 	}
 
 	protected constructor(
@@ -25,26 +29,35 @@ export abstract class GameNodeService {
 		public playerNodeService: PlayerNodeService
 	) {}
 
-	connect(): void {
+	public connect(): void {
 		this.playerNodeService.connect();
 	}
 
-	destroy(): void {
+	public destroy(): void {
 		this.playerNodeService.destroy();
 	}
 
-	abstract broadcast(gameEvent: GameEvent, data: any): void;
+	public abstract broadcast(gameEvent: GameEvent, data: any): void;
 
-	abstract broadcastPlayerTokens(): void;
 
-	abstract registerPlayerToken(playerToken: PlayerToken): Promise<boolean>;
+	public abstract broadcastPlayerTokens(): void;
 
-	abstract getPlayerTokens(): Promise<any>;
+	public abstract registerPlayerToken(playerToken: PlayerToken): Promise<boolean>;
 
-	addGameEventListener(gameEvent: GameEvent): Observable<any> {
+	public abstract getPlayerTokens(): Promise<any>;
+
+
+	public abstract broadcastPlayerStartDiceRolls(): void;
+
+	public abstract registerPlayerStartDiceRoll(playerGameDiceRoll: GameDiceRoll): Promise<boolean>;
+
+	public abstract getPlayerStartDiceRoll(): Promise<[PeerId, GameDiceRoll][]>;
+
+
+	public addGameEventListener<T = any>(gameEvent: GameEvent): Observable<T> {
 		return this.events
-			.filter((event: any) => event.data.gameEvent === gameEvent)
-			.map((event) => event.data.data);
+			.filter((event: any) => event.gameEvent === gameEvent)
+			.map((event) => event.data);
 	}
 
 

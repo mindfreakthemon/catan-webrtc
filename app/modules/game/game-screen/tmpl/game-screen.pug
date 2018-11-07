@@ -1,5 +1,14 @@
-.jumbotron
-	h1.display-3 Catan WebRTC
+ng-container('[ngSwitch]'='gameScenarioService.getGameState()')
+	game-welcome-screen('*ngSwitchCase'='GameState.START')
 
-	.lead
-		button.btn.btn-big.btn-default('(click)'='gameScenarioService.nextGameState()') START
+	role-console('*ngSwitchCase'='GameState.CHOOSE_ROLE', '(peer)'='setupPeer($event)')
+
+	name-selector-console('*ngSwitchCase'='GameState.CHOOSE_NAME', '[playerNodeService]'='gameNodeService.playerNodeService', '(player)'='handlePlayerCreated($event)')
+
+	game-lobby('*ngSwitchCase'='GameState.LOBBY', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')
+
+	game-token-selector('*ngSwitchCase'='GameState.CHOOSE_PLAYER_TOKEN', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')
+
+	game-field-assembler('*ngSwitchCase'='GameState.ASSEMBLE_FIELD', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')
+
+	game-dice-roller-screen('*ngSwitchCase'='GameState.START_DICE_ROLL')

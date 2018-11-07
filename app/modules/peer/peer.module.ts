@@ -10,6 +10,8 @@ import { PeerSlaveService } from './peer/services/peer-slave.service';
 import { PeerMasterService } from './peer/services/peer-master.service';
 import { PEER_CONFIG } from './peer.config';
 
+export * from './peer.exports';
+
 @NgModule({
 	imports: [
 		BrowserModule,
@@ -28,7 +30,7 @@ import { PEER_CONFIG } from './peer.config';
 		{
 			provide: PEER_CONFIG,
 			useValue: {
-				host: 'catan-webrtc-peerjs.herokuapp.com',
+				host: 'peerjs.middle-of-nowhere.name',
 				port: 443,
 				secure: true,
 				debug: 3,

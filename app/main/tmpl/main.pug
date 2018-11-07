@@ -1,22 +1,11 @@
-ng-container('*ngIf'='gameNodeService')
-	.container-fluid
-		.row
-			.col
-				signaling-console('[peerType]'='peerType', '[peerNodeService]'='gameNodeService.playerNodeService.peerNodeService')
-				master-console('*ngIf'='peerType === PeerType.MASTER')
-				slave-console('*ngIf'='peerType === PeerType.SLAVE')
-			.col
-				button.btn.btn-big.btn-danger('(click)'='destroyPeer()') DISCONNECT
+//ng-container('*ngIf'='gameNodeService')
+//	.container-fluid
+//		.row
+//			.col
+//				signaling-console('[peerType]'='peerType', '[peerNodeService]'='gameNodeService.playerNodeService.peerNodeService')
+//				master-console('*ngIf'='peerType === PeerType.MASTER')
+//				slave-console('*ngIf'='peerType === PeerType.SLAVE')
+//			.col
+//				button.btn.btn-big.btn-danger('(click)'='destroyPeer()') DISCONNECT
 
-ng-container('[ngSwitch]'='gameScenarioService.gameState')
-	game-screen('*ngSwitchCase'='GameState.START')
-
-	role-console('*ngSwitchCase'='GameState.CHOOSE_ROLE', '(peer)'='setupPeer($event)')
-
-	name-selector-console('*ngSwitchCase'='GameState.CHOOSE_NAME', '[playerNodeService]'='gameNodeService.playerNodeService', '(player)'='handlePlayerCreated($event)')
-
-	lobby('*ngSwitchCase'='GameState.LOBBY', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')
-
-	token-selector-console('*ngSwitchCase'='GameState.CHOOSE_PLAYER_TOKEN', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')
-
-	field-assembler('*ngSwitchCase'='GameState.ASSEMBLE_FIELD', '[gameNodeService]'='gameNodeService', '[peerType]'='peerType')
+game-screen('[gameNodeService]'='gameNodeService')

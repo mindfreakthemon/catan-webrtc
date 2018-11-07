@@ -21,7 +21,7 @@ export enum GameState {
 
 	ASSEMBLE_FIELD,
 
-	ROLL_DICE,
+	START_DICE_ROLL,
 
 	ERROR,
 

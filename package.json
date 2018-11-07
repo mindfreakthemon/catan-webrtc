@@ -3,7 +3,6 @@
   "private": true,
   "version": "0.0.1",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
     "@angular/common": "6.0.0",
     "@angular/compiler": "6.0.0",
@@ -24,8 +23,10 @@
     "gulp-angular2-project-registry": "^2.0.0",
     "istanbul": "^0.4.5",
     "peerjs": "^0.3.16",
+    "peer": "^0.2.10",
     "mocha": "^5.1.1",
     "rxjs": "^6.2.0",
+    "rxjs-compat": "^6.3.3",
     "stylus": "^0.54.5",
     "systemjs": "^0.21.3",
     "tslint": "^5.10.0",
