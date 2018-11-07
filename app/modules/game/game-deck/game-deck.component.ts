@@ -5,9 +5,9 @@ import { GameDeckService } from './services/game-deck.service';
 
 @Component({
 	moduleId: module.id,
-	selector: 'game-deck-stack',
-	templateUrl: 'tmpl/deck-stack.html',
-	styleUrls: ['styles/deck-stack.css']
+	selector: 'game-deck',
+	templateUrl: 'tmpl/game-deck.html',
+	styleUrls: ['styles/game-deck.css']
 })
 export class GameDeckComponent  {
 
