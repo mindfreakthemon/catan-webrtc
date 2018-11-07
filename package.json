@@ -23,7 +23,6 @@
     "gulp-angular2-project-registry": "^2.0.0",
     "istanbul": "^0.4.5",
     "peerjs": "^0.3.16",
-    "peer": "^0.2.10",
     "mocha": "^5.1.1",
     "rxjs": "^6.2.0",
     "rxjs-compat": "^6.3.3",
