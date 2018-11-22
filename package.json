@@ -20,7 +20,7 @@
     "autoprefixer": "^8.4.1",
     "chai": "^4.1.2",
     "gulp": "^4.0.0",
-    "gulp-angular2-project-registry": "^2.0.0",
+    "gulp-angular2-project-registry": "^2.1.0",
     "istanbul": "^0.4.5",
     "peerjs": "^0.3.16",
     "mocha": "^5.1.1",
@@ -29,7 +29,7 @@
     "stylus": "^0.54.5",
     "systemjs": "^0.21.3",
     "tslint": "^5.10.0",
-    "typescript": "~2.7.0",
+    "typescript": "~2.7.1",
     "zone.js": "^0.8.26"
   }
 }
