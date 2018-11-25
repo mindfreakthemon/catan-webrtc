@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PlayerMasterService } from './player/services/player-master.service';
 import { PlayerSlaveService } from './player/services/player-slave.service';
-import { CommonModule } from '@angular/common';
+// import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NameSelectorConsoleComponent } from './name-selector/name-selector-console.component';
@@ -15,7 +15,7 @@ export * from './player.exports';
 	imports: [
 		BrowserModule,
 		FormsModule,
-		CommonModule,
+		// CommonModule,
 		PeerModule
 	],
 

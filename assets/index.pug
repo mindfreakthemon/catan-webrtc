@@ -17,16 +17,6 @@ html
 		//- endinject
 		script.
 			window.DragEvent = window.DragEvent || window.Event;
-			System.config({
-				baseURL: './',
-				map: {
-					app: '#{buildDir}/app',
-					'rxjs-compat': 'npm:rxjs-compat',
-					'reflect-metadata': 'npm:reflect-metadata/Reflect.js'
-				},
-				packages: {
-					app: { main: '#{main}', defaultExtension: 'js' },
-					'rxjs-compat': { defaultExtension: 'js' }
-				}
-			});
+			System.config({ baseURL: './', map: { app: '#{buildDir}/app' } });
+			System.config({ packages: { app: { main: '#{main}', defaultExtension: 'js' } } });
 			System.import('app');

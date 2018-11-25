@@ -5,8 +5,8 @@ import { Player } from '../models/player';
 import { PlayersConstraints } from '../models/players-constraints';
 import { PLAYERS_CONSTRAINTS } from '../../player.config';
 import { PeerId, PeerNodeService } from '../../player.dependencies';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/filter';
+import 'rxjs-compat/operators/map';
+import 'rxjs-compat/operators/filter';
 
 @Injectable()
 export abstract class PlayerNodeService {

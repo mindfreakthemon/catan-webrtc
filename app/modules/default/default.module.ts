@@ -31,5 +31,5 @@ import { DroppableDirective } from './drag-n-drop/droppable.directive';
 		RootComponent
 	]
 })
-export class CommonModule {
+export class DefaultModule {
 }

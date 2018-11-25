@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { PeerMasterService } from '../peer/services/peer-master.service';
-import 'rxjs/add/operator/takeUntil';
+import 'rxjs-compat/operators/takeUntil';
 
 @Component({
 	moduleId: module.id,

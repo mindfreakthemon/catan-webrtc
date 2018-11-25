@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+// import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { GameScenarioService } from './game-scenario/services/game-scenario.service';
@@ -31,7 +31,7 @@ export * from './game.dependencies';
 	imports: [
 		BrowserModule,
 		FormsModule,
-		CommonModule,
+		// CommonModule,
 		PeerModule,
 		PlayerModule
 	],

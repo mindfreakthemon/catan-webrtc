@@ -6,7 +6,7 @@ import { Broadcast } from '../modules/player/player/enums/broadcast.enum';
 import { GameNodeService } from '../modules/game/game/services/game-node.service';
 import { GameMasterService } from '../modules/game/game/services/game-master.service';
 import { GameSlaveService } from '../modules/game/game/services/game-slave.service';
-import 'rxjs/add/operator/takeUntil';
+import 'rxjs-compat/operators/takeUntil';
 import { GameEvent } from '../modules/game/game/enums/game-event.enum';
 import { GameContextService } from '../modules/game/game/services/game-context.service';
 import { PlayerToken } from '../modules/game/game/enums/player-token.enum';

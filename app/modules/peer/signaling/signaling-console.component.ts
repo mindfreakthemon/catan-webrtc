@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Input } from '@angular/core';
 import { PeerNodeService } from '../peer/services/peer-node.service';
 import { PeerType } from '../peer/enums/peer-type.enum';
-import 'rxjs/add/operator/takeUntil';
+import 'rxjs-compat/operators/takeUntil';
 
 @Component({
 	moduleId: module.id,
