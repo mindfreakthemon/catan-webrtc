@@ -7,8 +7,8 @@ import { Observable } from 'rxjs/Observable';
 import { PlayerToken } from '../enums/player-token.enum';
 import { GameDiceRoll } from '../../game-dice-roller/models/game-dice-roll';
 import { Broadcast, PeerId } from '../../game.dependencies';
-import 'rxjs-compat/operators/map';
-import 'rxjs-compat/operators/filter';
+import 'rxjs-compat/add/operator/map';
+import 'rxjs-compat/add/operator/filter';
 
 @Injectable()
 export abstract class GameNodeService {
